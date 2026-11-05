@@ -299,6 +299,14 @@ publication remain pending; no real messages were sent for these checks.
 Local `make check` passes Ruff, ty and 2003 tests with two platform-specific skips;
 the updated Agent Skill also passes its standalone validator.
 
+Follow-up Windows diagnosis traced malformed journal indexes to a text-mode `os.open`:
+the CRT removed a trailing Ctrl+Z byte before SQLite opened the file. Private databases
+now use binary mode; the affected derived date index is rebuilt from preserved table data.
+Regression coverage verifies byte-for-byte preservation, native Windows truncation without
+a write, and recovery of a deterministically truncated journal index. Production error
+redaction and journal timestamp formats remain unchanged.
+Local `make check` passes Ruff, ty and 2006 tests with three platform-specific skips.
+
 ### Outbound recipient and confirmation policies (unreleased)
 
 Implemented local-only all-chat writes, one-off confirmed sends to people/private bots,

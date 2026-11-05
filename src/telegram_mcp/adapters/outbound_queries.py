@@ -38,10 +38,13 @@ def prepare_indexes(db: sqlite3.Connection) -> None:
                         (*index_values(operation), ident),
                     )
     db.executescript("""
+        -- Replace the derived index that a Windows text-mode open could truncate.
+        -- The authoritative table and JSON are left intact.
+        DROP INDEX IF EXISTS operations_date;
         CREATE INDEX IF NOT EXISTS operations_account ON operations(account);
         CREATE INDEX IF NOT EXISTS operations_chat ON operations(account, chat_id);
         CREATE INDEX IF NOT EXISTS operations_status ON operations(account, status);
-        CREATE INDEX IF NOT EXISTS operations_date ON operations(account, created_at);
+        CREATE INDEX IF NOT EXISTS operations_created_at ON operations(account, created_at);
     """)
 
 
