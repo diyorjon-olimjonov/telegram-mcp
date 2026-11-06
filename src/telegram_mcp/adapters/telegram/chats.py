@@ -23,6 +23,7 @@ class ChatGateway:
         *,
         clock: Clock,
         max_dialogs: int,
+        truncate_dialogs: bool = False,
         cache: dict[str, Chat] | None = None,
         catalog_cache_ttl_seconds: float = 300,
         catalog_cache_stale_seconds: float = 300,
@@ -36,6 +37,7 @@ class ChatGateway:
             self.cache,
             ttl=catalog_cache_ttl_seconds,
             stale=catalog_cache_stale_seconds,
+            truncate=truncate_dialogs,
         )
 
     async def check_authorization(self) -> None:

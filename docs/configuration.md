@@ -257,6 +257,7 @@ constrain this application, not the account credentials themselves. Login codes 
 | --- | --- | --- |
 | `rpc_timeout_seconds` | `20` | Greater than 0, at most 60 |
 | `max_dialogs` | `10000` | 1–100000 |
+| `truncate_dialogs` | `false` | `true` stops the catalog at `max_dialogs` (pinned, then most recently active dialogs) instead of failing with `CATALOG_LIMIT`. Fork-only setting. |
 | `catalog_cache_ttl_seconds` | `300` | 0–300 seconds; 0 disables completed-snapshot reuse |
 | `catalog_cache_stale_seconds` | `300` | 0–300 seconds after the TTL; 0 disables serving an older snapshot during refresh |
 | `rpc_pages_per_call` | `12` | 1–100 |

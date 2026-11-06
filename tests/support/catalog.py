@@ -56,7 +56,15 @@ def pinned_page(ids: list[int]):
     )
 
 
-def gateway(respond, *, ttl: float = 300, stale: float = 300, maximum: int = 10000, folders=None):
+def gateway(
+    respond,
+    *,
+    ttl: float = 300,
+    stale: float = 300,
+    maximum: int = 10000,
+    folders=None,
+    truncate: bool = False,
+):
     clock = FakeClock(now=BASE)
 
     async def with_pinned(request):
@@ -76,6 +84,7 @@ def gateway(respond, *, ttl: float = 300, stale: float = 300, maximum: int = 100
         runtime,
         clock=clock,
         max_dialogs=maximum,
+        truncate_dialogs=truncate,
         catalog_cache_ttl_seconds=ttl,
         catalog_cache_stale_seconds=stale,
     )

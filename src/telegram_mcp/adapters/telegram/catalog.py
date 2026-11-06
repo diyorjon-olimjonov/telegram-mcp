@@ -31,9 +31,10 @@ class DialogCatalog:
         *,
         ttl: float = 300,
         stale: float = 300,
+        truncate: bool = False,
     ):
         self.runtime, self.clock, self.cache = runtime, clock, cache
-        self.scanner = DialogScanner(runtime, max_dialogs)
+        self.scanner = DialogScanner(runtime, max_dialogs, truncate=truncate)
         self.ttl, self.stale = ttl, stale
         self.wait_seconds = 5.0
         self._snapshot: Snapshot | None = None

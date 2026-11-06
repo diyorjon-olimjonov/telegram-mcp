@@ -48,6 +48,7 @@ class Settings(Model):
     timezone: str = "UTC"
     rpc_timeout_seconds: float = Field(default=20, gt=0, le=60)
     max_dialogs: int = Field(default=10000, ge=1, le=100000)
+    truncate_dialogs: bool = Field(default=False, strict=True)
     catalog_cache_ttl_seconds: float = Field(default=300, ge=0, le=300)
     catalog_cache_stale_seconds: float = Field(default=300, ge=0, le=300)
     rpc_pages_per_call: int = Field(default=12, ge=1, le=100)
