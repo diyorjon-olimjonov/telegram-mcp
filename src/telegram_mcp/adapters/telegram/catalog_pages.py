@@ -46,8 +46,13 @@ class DialogScan:
 
 
 class DialogScanner:
-    def __init__(self, runtime: TelegramRuntime, max_dialogs: int):
-        self.runtime, self.max_dialogs = runtime, max_dialogs
+    def __init__(self, runtime: TelegramRuntime, max_dialogs: int, *, truncate: bool = False):
+        # truncate=True (opt-in): stop at max_dialogs, keeping pinned and most recently
+        # active dialogs, instead of failing with CATALOG_LIMIT.
+        self.runtime, self.max_dialogs, self.truncate = runtime, max_dialogs, truncate
+
+    def _full(self, count: int) -> bool:
+        return self.truncate and count >= self.max_dialogs
 
     async def step(self, client: Any, builder: DialogScan) -> None:
         if builder.phase == "pinned":
@@ -67,6 +72,9 @@ class DialogScanner:
             else:
                 builder.phase = "dialogs"
         elif builder.phase == "dialogs":
+            if self._full(len(builder.dialogs)):
+                builder.phase = "complete"
+                return
             await self._dialog_page(client, builder)
 
     async def _dialog_page(self, client: Any, builder: DialogScan) -> None:
@@ -96,7 +104,11 @@ class DialogScanner:
             if getattr(message, "peer_id", None) is not None
         }
         additions, self_id = self._collect_dialogs(builder, response)
-        finished = isinstance(response, types.messages.Dialogs) or len(response.dialogs) < limit
+        finished = (
+            isinstance(response, types.messages.Dialogs)
+            or len(response.dialogs) < limit
+            or self._full(len(builder.dialogs) + len(additions))
+        )
         next_offset = None
         next_peer = None
         if not finished:
@@ -156,6 +168,8 @@ class DialogScanner:
             if getattr(entity, "is_self", False):
                 self_id = cid
             if not getattr(entity, "migrated_to", None) and cid not in builder.dialogs:
+                if self._full(len(builder.dialogs) + len(additions)):
+                    break
                 additions[cid] = DialogView(entity, raw, archived)
                 if len(builder.dialogs) + len(additions) > self.max_dialogs:
                     raise ToolError(

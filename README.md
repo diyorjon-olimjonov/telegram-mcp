@@ -2,6 +2,20 @@
 
 <!-- mcp-name: io.github.egor-fedorov/telegram-mcp -->
 
+> **Fork note.** This is a fork of [egor-fedorov/telegram-mcp](https://github.com/egor-fedorov/telegram-mcp)
+> (MIT). Branch `max-dialogs-truncate` is based on v0.8.0 and adds one opt-in setting,
+> `truncate_dialogs` (default `false`, so behavior is unchanged unless you enable it).
+> With `truncate_dialogs = true`, the dialog catalog stops at `max_dialogs`, keeping pinned
+> and most recently active dialogs, instead of failing with `CATALOG_LIMIT`. This cuts
+> rate-limit waits on accounts with thousands of chats. Dialogs past the limit are not
+> visible; public channels requested by username or ID are unaffected.
+>
+> ```bash
+> uv tool install --python 3.12 "git+https://github.com/diyorjon-olimjonov/telegram-mcp@max-dialogs-truncate"
+> ```
+>
+> Then add `max_dialogs = 300` and `truncate_dialogs = true` to your config.
+
 [![CI](https://github.com/egor-fedorov/telegram-mcp/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/egor-fedorov/telegram-mcp/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/egor-fedorov/telegram-mcp/blob/main/LICENSE)
 [![Glama | Listed](https://glama.ai/mcp/servers/egor-fedorov/telegram-mcp/badges/score.svg)](https://glama.ai/mcp/servers/egor-fedorov/telegram-mcp)

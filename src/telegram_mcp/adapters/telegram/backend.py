@@ -48,6 +48,7 @@ class TelegramBackend:
             self.runtime,
             clock=clock if clock is not None else SystemClock(),
             max_dialogs=settings.max_dialogs,
+            truncate_dialogs=settings.truncate_dialogs,
             cache=chat_cache,
             catalog_cache_ttl_seconds=settings.catalog_cache_ttl_seconds,
             catalog_cache_stale_seconds=settings.catalog_cache_stale_seconds,
